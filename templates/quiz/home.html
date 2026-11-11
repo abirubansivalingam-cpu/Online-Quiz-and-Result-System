@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-copy"><div class="eyebrow">LEARN · PRACTICE · IMPROVE</div><h1>Knowledge grows<br>one quiz at a time.</h1><p>Take short practice quizzes, get instant results, and see how far you've come.</p>
+  <div class="hero-actions"><a class="btn primary" href="{% url 'register' %}">Start a free quiz →</a><a class="btn secondary" href="{% url 'login' %}">Student login</a></div>
+  <div class="trust-row"><span>✓ Instant scoring</span><span>✓ Track results</span><span>✓ Learn at your pace</span></div></div>
+  <div class="hero-art"><div class="art-circle"></div><div class="quiz-preview"><div class="preview-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="preview-label">PRACTICE QUIZ</span></div><div class="preview-question">Which language powers Django?</div><div class="preview-option selected">Python <span>✓</span></div><div class="preview-option">Java</div><div class="preview-option">C++</div><div class="preview-progress"><span></span></div><div class="preview-foot">Question 2 of 10 <b>20%</b></div></div><div class="score-float"><span>YOUR SCORE</span><strong>92%</strong><small>Great progress!</small></div></div>
+</section>
+<section class="section-head"><div><div class="eyebrow">GET STARTED</div><h2>Explore available quizzes</h2></div><p>Pick a topic and test your skills.</p></section>
+<div class="quiz-grid">
+{% for quiz in quizzes %}
+  <article class="quiz-card"><div class="quiz-symbol">{% if forloop.counter|divisibleby:2 %}⌘{% else %}✦{% endif %}</div><div class="pill">{{ quiz.question_count }} questions</div><h3>{{ quiz.title }}</h3><p>{{ quiz.description|default:"Practice your knowledge and check your score." }}</p><div class="card-meta"><span>◷ {{ quiz.duration_minutes }} min</span><span>Pass: {{ quiz.pass_mark }}%</span></div><a class="card-link" href="{% url 'quiz_detail' quiz.id %}">View quiz <span>→</span></a></article>
+{% empty %}
+  <div class="empty-state"><h3>No quizzes published yet</h3><p>Admin can add quizzes from the admin dashboard.</p></div>
+{% endfor %}
+</div>
+<section class="bottom-cta"><div><h2>Ready to check your knowledge?</h2><p>Create a student account and take your first quiz.</p></div><a class="btn light" href="{% url 'register' %}">Create student account →</a></section>
+{% endblock %}

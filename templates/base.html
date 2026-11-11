@@ -1,0 +1,33 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0b18">
+  <meta name="description" content="QuizNest online quiz, assessment and result tracking platform.">
+  <title>{% block title %}QuizNest{% endblock %} | Online Quiz and Result System</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{% url 'home' %}"><span class="brand-icon">Q</span><span>QuizNest</span></a>
+  <nav>
+    <a href="{% url 'home' %}">Home</a>
+    {% if user.is_authenticated %}
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+      <a href="{% url 'result_history' %}">My Results</a>
+      <form class="inline-form" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="nav-button" type="submit">Log out</button></form>
+    {% else %}
+      <a href="{% url 'login' %}">Log in</a>
+      <a class="nav-cta" href="{% url 'register' %}">Get started</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+  {% if messages %}<div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer">QuizNest · Online Quiz and Result System · MCA Mini Project</footer>
+</body>
+</html>

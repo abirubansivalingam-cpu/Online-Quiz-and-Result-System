@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Taking {{ quiz.title }}{% endblock %}
+{% block content %}
+<div class="quiz-taking-head"><div><div class="eyebrow">QUIZ IN PROGRESS</div><h1>{{ quiz.title }}</h1><p class="muted">Choose the best answer for every question.</p></div><div class="timer-card"><span>TIME REMAINING</span><strong id="timer">{{ quiz.duration_minutes }}:00</strong></div></div>
+<form id="quiz-form" method="post" action="{% url 'submit_quiz' attempt.id %}">{% csrf_token %}
+{% for question in questions %}<section class="question-card"><div class="question-number">QUESTION {{ forloop.counter }} OF {{ questions|length }}</div><h2>{{ question.text }}</h2><div class="options-list">
+<label class="option"><input type="radio" name="question_{{ question.id }}" value="A"><span class="option-letter">A</span><span>{{ question.option_a }}</span></label>
+<label class="option"><input type="radio" name="question_{{ question.id }}" value="B"><span class="option-letter">B</span><span>{{ question.option_b }}</span></label>
+<label class="option"><input type="radio" name="question_{{ question.id }}" value="C"><span class="option-letter">C</span><span>{{ question.option_c }}</span></label>
+<label class="option"><input type="radio" name="question_{{ question.id }}" value="D"><span class="option-letter">D</span><span>{{ question.option_d }}</span></label>
+</div></section>{% endfor %}
+<div class="submit-bar"><p class="muted">Review your answers before submitting.</p><button class="btn primary" type="submit" id="submit-btn">Submit quiz →</button></div>
+</form>
+<script>
+(function(){
+ const secondsAllowed = {{ quiz.duration_minutes }} * 60;
+ const startedAt = new Date("{{ attempt.started_at|date:'c' }}").getTime();
+ const timer = document.getElementById("timer");
+ const form = document.getElementById("quiz-form");
+ let submitted = false;
+ function tick(){
+   const remaining = Math.max(0, secondsAllowed - Math.floor((Date.now()-startedAt)/1000));
+   const m = Math.floor(remaining/60), s = remaining%60;
+   timer.textContent = m + ":" + String(s).padStart(2,"0");
+   if(remaining <= 0 && !submitted){ submitted = true; form.submit(); }
+ }
+ form.addEventListener("submit", function(e){
+   if(submitted) return;
+   if(!confirm("Submit your quiz now?")){e.preventDefault();return;}
+   submitted = true;
+ });
+ tick(); setInterval(tick,1000);
+})();
+</script>
+{% endblock %}

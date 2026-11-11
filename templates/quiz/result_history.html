@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block title %}My results{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">YOUR PROGRESS</div><h1>My result history</h1><p class="muted">Review completed quiz attempts and scores.</p></div><a class="btn primary" href="{% url 'dashboard' %}">Take a quiz →</a></div>
+<section class="history-box"><div class="table-wrap"><table><thead><tr><th>Quiz</th><th>Date</th><th>Score</th><th>Percentage</th><th>Status</th><th></th></tr></thead><tbody>{% for attempt in attempts %}<tr><td>{{ attempt.quiz.title }}</td><td>{{ attempt.completed_at|date:"d M Y" }}</td><td>{{ attempt.score }}/{{ attempt.total_questions }}</td><td>{{ attempt.percentage }}%</td><td><span class="status-pill {% if attempt.passed %}status-pass{% else %}status-fail{% endif %}">{% if attempt.passed %}Passed{% else %}Not passed{% endif %}</span></td><td><a href="{% url 'result_detail' attempt.id %}">Details</a></td></tr>{% empty %}<tr><td colspan="6" class="empty-cell">No completed attempts yet. Choose a quiz to get started.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

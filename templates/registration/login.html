@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<section class="auth-card">
+  <div class="eyebrow">WELCOME BACK</div><h1>Log in to QuizNest</h1><p class="muted">Continue learning and track your progress.</p>
+  <form method="post" class="stack-form">{% csrf_token %}
+    {{ form.as_p }}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    <button class="btn primary full" type="submit">Log in</button>
+  </form>
+  <p class="muted center">New here? <a href="{% url 'register' %}">Create an account</a></p>
+</section>
+{% endblock %}
